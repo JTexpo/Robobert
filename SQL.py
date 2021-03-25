@@ -171,17 +171,11 @@ class SQL(commands.Cog):
                 if index != 0:
                     sql_c_msg += ','
                 index += 1
-                                
-                if collumn[1] == 'author_ID':
-                    sql_c_msg += " author_ID = {} ".format(ctx.author.id)
-                    continue
                 
-                c_tip = self.command_tip(str(collumn[1]))
                 c_embed = discord.Embed(title = "Please Type The {}".format(collumn[1]),
-                    description = "{}\n---\nCurrently : {}".format(c_tip,current[elm][index]),
+                    description = "\n---\nCurrently : {}".format(current[elm][index]),
                     colour = color
                     )
-                c_embed.set_thumbnail(url = "attachment://Crypt_Keeper.gif")
                 await c_out_msg.edit(embed = c_embed)
                 in_msg = await self.bot.wait_for('message', timeout=60.0, check = check_message)
                 if "VARCHAR" in collumn[2]:

@@ -42,12 +42,14 @@ class Fun(commands.Cog):
         await Util.log_command(self.bot,ctx,"dick")
         message = "<:dick_4:699753071760113796>"
         rng = random.randint(1,3)
-        while rng != 1:
+        reroll = 2
+        while reroll:
             if rng == 3:
                 message += "<:dick_3:699753105344167936>"
             elif rng == 2:
                 message += "<:dick_2:699753137367547964>"
             rng = random.randint(1,3)
+            if rng == 1: reroll -= 1
         message += "<:dick_1:699753154815721562>"
         await ctx.send(message)
 

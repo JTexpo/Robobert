@@ -162,6 +162,24 @@ The current count is {}\nThis means that the next number you should type is : **
         embed.set_footer(text = "highscore : {}".format(Util.COUNT_HIGH))
         mchannel = self.bot.get_channel(Util.CTAM_CHNL[0])
         await mchannel.send(embed = embed)
+    
+    @commands.Cog.listener()
+    async def on_message_delete(self, ctx, ctx2):
+        if not Util.is_ctam_chnl(ctx):
+            return
+        try:
+            number = int(ctx.content)
+        except Exception as error:
+            return
+        embed = discord.Embed(title = "Watch out everyone we got a troll!",
+            description = "**{}** : edited their number **{}** to **{}**.\n\
+The current count is {}\nThis means that the next number you should type is : **{}**".format(
+            ctx.author.mention,ctx.content,ctx2.content,Util.COUNT-1,Util.COUNT),
+            colour = random.randint(0,0xffffff)
+            )
+        embed.set_footer(text = "highscore : {}".format(Util.COUNT_HIGH))
+        mchannel = self.bot.get_channel(Util.CTAM_CHNL[0])
+        await mchannel.send(embed = embed)
 
 def setup(bot):
     bot.add_cog(CTAM(bot))

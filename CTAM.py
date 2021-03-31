@@ -164,7 +164,7 @@ The current count is {}\nThis means that the next number you should type is : **
         await mchannel.send(embed = embed)
     
     @commands.Cog.listener()
-    async def on_message_delete(self, ctx, ctx2):
+    async def on_message_edit(self, ctx, ctx2):
         if not Util.is_ctam_chnl(ctx):
             return
         try:

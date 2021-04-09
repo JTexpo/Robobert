@@ -187,7 +187,7 @@ class Fun(commands.Cog):
     @commands.command(name = 'sip')
     @commands.cooldown(1, 300, commands.BucketType.user)
     @Util.fun_pass()
-    async def mute(self, ctx, target: discord.Member = None, *,reason = "none"):
+    async def sip(self, ctx, target: discord.Member = None, *,reason = "none"):
         await Util.log_command(self.bot,ctx,"sip")
         head = "{} Is Just Taking a Sip...".format(ctx.author.name) if target == None else "{} Is Just Taking a Sip With {}...".format(ctx.author.name,target.name)
         desc = "hmmmmmmm..." if reason == "none" else "Oh... Well... this is weird.\n**Reason :** {}".format(reason)

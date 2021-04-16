@@ -194,6 +194,16 @@ class Fun(commands.Cog):
         image = "https://robobert.tobira.io/images/fun-commands/sip.gif"
         await self.fun_embed(ctx,head,desc,image)
 
+    @commands.command(name = 'slap')
+    @commands.cooldown(1, 300, commands.BucketType.user)
+    @Util.fun_pass()
+    async def slap(self, ctx, target: discord.Member = None, *,reason = "none"):
+        await Util.log_command(self.bot,ctx,"slap")
+        head = "{} Is Ready To Throw Fists!".format(ctx.author.name) if target == None else "{} Is Going To Throw Down With {}!".format(ctx.author.name,target.name)
+        desc = "ARGHHHHHHH" if reason == "none" else "This is payback for...\n**Reason :** {}".format(reason)
+        image = "https://robobert.tobira.io/images/fun-commands/slap.gif"
+        await self.fun_embed(ctx,head,desc,image)
+
     @commands.command(name = 'ban')
     @commands.cooldown(1, 300, commands.BucketType.user)
     @Util.fun_pass()

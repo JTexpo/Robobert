@@ -1,5 +1,7 @@
 const axios = require('axios'); 
 const cheerio = require('cheerio'); 
+const { MessageEmbed } = require('discord.js');
+
 
 // A Function To Get The Data From A Web Page, WEB SCRAPING
 async function getWebData(url,slug){
@@ -26,13 +28,33 @@ async function getWebData(url,slug){
 }
 
 // Abstracted Function Of getWebData For Comics
-async function getComicData(url){
-    return getWebData(url,"comic")
+async function getComicData(url){ return getWebData(url,"comic") }
+
+function buildComicEmbed(comic){
+    const comicDetails = comic["comicDetails"];
+    const authorDetails = comicDetails["author"]["authorDetails"];
+    // building out the embed
+    let comicEmbed = new MessageEmbed()
+        .setTitle(`A Comic Found On Explosm.net`)
+        .setThumbnail(authorDetails["image"]["mediaItemUrl"])
+        .setColor('RANDOM')
+        .setURL("https://explosm.net")
+        .setFooter({text:comic["slug"]});
+    if (comicDetails["comicimgurl"]){
+        comicEmbed.setFields([
+                {inline: true, name: "Comic", value: `${comicDetails["comicimgurl"].split("/")[1].split('.')[0]}`},
+                {inline: true, name: "Author", value: `${authorDetails["name"]}`},
+            ]).setImage(`https://files.explosm.net/comics/${comicDetails["comicimgurl"]}`);
+    }else{
+        comicEmbed.setFields([
+                {inline: true, name: "Comic", value: `${comicDetails["comicimgstaticbucketurl"]["title"]}`},
+                {inline: true, name: "Author", value: `${authorDetails["name"]}`},
+            ]).setImage(`${comicDetails["comicimgstaticbucketurl"]["mediaItemUrl"]}`);
+    }
+    return comicEmbed
 }
 
 // Abstracted Function Of getWebData For Videos
-async function getVideoData(url){
-    return getWebData(url,"short")
-}
+async function getVideoData(url){ return getWebData(url,"short") }
 
-module.exports = { getComicData, getVideoData };
+module.exports = { getComicData, getVideoData, buildComicEmbed };

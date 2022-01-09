@@ -21,7 +21,6 @@ data: new SlashCommandBuilder()
 async execute(interaction) {
     let comicId = ""
     rcgTemplate = await getRCGTemplate();
-    console.log(rcgTemplate);
     for (const panel of rcgTemplate["panels"]){
         await downloadImage(`https://rcg-cdn.explosm.net/panels/${panel["filename"]}`,`assets/rcg/panel_${panel["column"]}.png`);
         comicId += panel["slug"];

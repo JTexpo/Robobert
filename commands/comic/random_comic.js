@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 
-const { getComicData } = require('../../robobert/pkg');
+const { getComicData, buildComicEmbed } = require('../../robobert/pkg');
 
 module.exports = {
 data: new SlashCommandBuilder()
@@ -17,27 +17,7 @@ async execute(interaction) {
     // using the random slug as the comic extension
     const comic = await getComicData(`https://explosm.net/comics/${comic_name}`);
     // reading the important info from the comic
-    const comicDetails = comic["comicDetails"];
-    const authorDetails = comicDetails["author"]["authorDetails"];
-    // building out the embed
-    let comicEmbed = new MessageEmbed()
-        .setTitle(`A Comic Found On Explosm.net`)
-        .setThumbnail(authorDetails["image"]["mediaItemUrl"])
-        .setColor('RANDOM')
-        .setURL("https://explosm.net")
-        .setFooter({text:comic_name});
-
-    if (comicDetails["comicimgurl"]){
-        comicEmbed.setFields([
-                {inline: true, name: "Comic", value: `${comicDetails["comicimgurl"].split("/")[1].split('.')[0]}`},
-                {inline: true, name: "Author", value: `${authorDetails["name"]}`},
-            ]).setImage(`https://files.explosm.net/comics/${comicDetails["comicimgurl"]}`);
-    }else{
-        comicEmbed.setFields([
-            {inline: true, name: "Comic", value: `${comicDetails["comicimgstaticbucketurl"]["title"]}`},
-            {inline: true, name: "Author", value: `${authorDetails["name"]}`},
-        ]).setImage(`${comicDetails["comicimgstaticbucketurl"]["mediaItemUrl"]}`);
-    }
+    const comicEmbed = buildComicEmbed(comic);
     // sending the embed
 	await interaction.editReply({embeds : [comicEmbed]});
 },

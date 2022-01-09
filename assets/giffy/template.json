@@ -1,0 +1,26 @@
+{"TEMPLATES":{
+    "FIGHT":{
+        "CONTENT": "Hold Back My Purse!",
+        "IMG":"fight.gif"
+    },
+    "HUG":{
+        "CONTENT": "Lets All Hug It Out With Big Hug Bill.",
+        "IMG":"hug.gif"
+    },
+    "KICK":{
+        "CONTENT": "Go On! Get-",
+        "IMG":"kick.gif"
+    },
+    "SHUSH":{
+        "CONTENT": "Talk To The Shield, Lunk's Not In The Mood To Listen.",
+        "IMG":"shush.gif"
+    },
+    "SIP":{
+        "CONTENT": "Don't Mind Me, Just Taking A Sip.",
+        "IMG":"sip.gif"
+    },
+    "SPEAK":{
+        "CONTENT": "What's The Matter? Shield Got Your Tongue?",
+        "IMG":"speak.gif"
+    }
+}}

@@ -1,7 +1,7 @@
 // Require the necessary discord.js classes
 const { Client, Collection, Intents, MessageEmbed } = require('discord.js');
-const { INTERVAL_TIME, ANOUNCE_CHANNEL, GUILD} = require('./config.json')
-const { getComicData } = require('./robobert/pkg')
+const { INTERVAL_TIME, ANOUNCE_CHANNEL, GENERAL_CHANNEL, TOPIC_CHANNEL, GUILD, RECENT_COMIC} = require('./config.json')
+const { getComicData, buildComicEmbed } = require('./robobert/pkg')
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -62,34 +62,35 @@ client.on('interactionCreate', async interaction => {
 async function comicCheck(){
     const CHGuild = await client.guilds.fetch(GUILD);
     const announceChnl = await CHGuild.channels.fetch(ANOUNCE_CHANNEL);
-    let recentComic = "";
+    const generalChnl = await CHGuild.channels.fetch(GENERAL_CHANNEL);
+    const topicChnl = await CHGuild.channels.fetch(TOPIC_CHANNEL);
+    let recentComic = RECENT_COMIC;
     setInterval(async ()=>{try{
         const comic = await getComicData(`https://explosm.net/comics/latest`);
         if (recentComic != comic["slug"]){
             recentComic = comic["slug"];
-            const comicDetails = comic["comicDetails"];
-            const authorDetails = comicDetails["author"]["authorDetails"];
-            // building out the embed
-            let comicEmbed = new MessageEmbed()
-                .setTitle(`A Comic Found On Explosm.net`)
-                .setThumbnail(authorDetails["image"]["mediaItemUrl"])
-                .setColor('RANDOM')
-                .setURL("https://explosm.net")
-                .setFooter({text:comic["slug"]});
-            if (comicDetails["comicimgurl"]){
-                comicEmbed.setFields([
-                        {inline: true, name: "Comic", value: `${comicDetails["comicimgurl"].split("/")[1].split('.')[0]}`},
-                        {inline: true, name: "Author", value: `${authorDetails["name"]}`},
-                    ]).setImage(`https://files.explosm.net/comics/${comicDetails["comicimgurl"]}`);
-            }else{
-                comicEmbed.setFields([
-                        {inline: true, name: "Comic", value: `${comicDetails["comicimgstaticbucketurl"]["title"]}`},
-                        {inline: true, name: "Author", value: `${authorDetails["name"]}`},
-                    ]).setImage(`${comicDetails["comicimgstaticbucketurl"]["mediaItemUrl"]}`);
-            }
+            const comicEmbed = buildComicEmbed(comic);
             // sending the embed
             const announceMessage = await announceChnl.send({embeds:[comicEmbed]});
             await announceMessage.crosspost()
+            const comicThread = await announceMessage.startThread({name: `COMIC ${comic["slug"]}`});
+            
+            const commentEmbed = new MessageEmbed()
+                .setTitle("A New Comic Was Posted")
+                .setDescription(`Want To Comment On ${comic["comicDetails"]["author"]["authorDetails"]["name"]}'s Comic?\nCheck Out This Topic Thread <#${comicThread.id}>`)
+                .setImage("attachment://checkout.png")
+                .setThumbnail(comic["comicDetails"]["author"]["authorDetails"]["image"]["mediaItemUrl"])
+                .setColor("RANDOM");
+
+            const commentMessageDetails = {
+                embeds:[commentEmbed],
+                files: [{
+                    attachment:'assets/comicUpdate/checkout.png',
+                    name:'checkout.png'
+                  }]
+            }
+            generalChnl.send(commentMessageDetails);
+            topicChnl.send(commentMessageDetails);
     }}catch(err){console.log(err);}},INTERVAL_TIME);
 }
 

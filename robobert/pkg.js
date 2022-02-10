@@ -40,17 +40,16 @@ function buildComicEmbed(comic){
         .setColor('RANDOM')
         .setURL("https://explosm.net")
         .setFooter({text:comic["slug"]});
+    let comic_url = None;
     if (comicDetails["comicimgurl"]){
-        comicEmbed.setFields([
-                {inline: true, name: "Comic", value: `${comicDetails["comicimgurl"].split("/")[1].split('.')[0]}`},
-                {inline: true, name: "Author", value: `${authorDetails["name"]}`},
-            ]).setImage(`https://files.explosm.net/comics/${comicDetails["comicimgurl"]}`);
+        comic_url = `https://files.explosm.net/comics/${comicDetails["comicimgurl"]}`;
     }else{
-        comicEmbed.setFields([
-                {inline: true, name: "Comic", value: `${comicDetails["comicimgstaticbucketurl"]["title"]}`},
-                {inline: true, name: "Author", value: `${authorDetails["name"]}`},
-            ]).setImage(`${comicDetails["comicimgstaticbucketurl"]["mediaItemUrl"]}`);
+       comic_url = `${comicDetails["comicimgstaticbucketurl"]["mediaItemUrl"]}`;
     }
+     comicEmbed.setFields([
+                {inline: true, name: "Comic", value:`${comicDetails["title"]}`;},
+                {inline: true, name: "Author", value: `${authorDetails["name"]}`},
+            ]).setImage(comic_url);
     return comicEmbed
 }
 
